@@ -20,12 +20,12 @@ public class AES
 	{
 		SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
 		Cipher cipher = Cipher.getInstance("AES/"+mode+"/"+padding);
-		if(mode.equals("ECB"))
+		if(mode.equals("ECB")) 
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 		else
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
 
-		if(plainText.getBytes().length%16!=0)
+		if(padding.equals("NoPadding") && plainText.getBytes().length%16!=0)
 		{
 			System.out.println("wrong block size");
 			return "";
@@ -44,6 +44,8 @@ public class AES
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
 		else
 			cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
+		
+		
 		byte[] cipherbytes = cipher.doFinal(Base64.getDecoder().decode(cipherText));
 		return new String(cipherbytes);
 	}
