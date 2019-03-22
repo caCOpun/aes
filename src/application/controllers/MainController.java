@@ -1,6 +1,7 @@
 package application.controllers;
 
 import java.net.URL;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ResourceBundle;
@@ -40,7 +41,7 @@ public class MainController implements Initializable
 		
 		keyLengthComboBox.setItems(FXCollections.observableArrayList("128", "192", "256"));
 		modeComboBox.setItems(FXCollections.observableArrayList("ECB", "CBC", "OFB", "CFB", "CTR"));
-		paddingComboBox.setItems(FXCollections.observableArrayList("PKCS5Padding", "PKCS7Padding"));
+		paddingComboBox.setItems(FXCollections.observableArrayList("PKCS5Padding", "NoPadding"));
 		
 		
 		keyLengthComboBox.setPromptText("Key Length");
@@ -58,15 +59,21 @@ public class MainController implements Initializable
 			String key = keyTextField.textProperty().get();
 			
 			if(keyLength == null || mode == null || padding == null || key == null || key.equals(""))
+			{
+				System.out.println("some fields are blank");
 				return;
+			}
 			if(key.length() != Integer.parseInt(keyLength)/8)
+			{
+				System.out.printf("invalid key length %d, expecting %d\n", key.length(), Integer.parseInt(keyLength)/8);
 				return;
+			}
 			String cipherText = "";
 			try
 			{
 				cipherText = AES.encrypt(inputTextArea.getText(), mode, padding, key);
 			}
-			catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e1)
+			catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e1)
 			{
 				e1.printStackTrace();
 			}
@@ -81,15 +88,21 @@ public class MainController implements Initializable
 			String key = keyTextField.textProperty().get();
 			
 			if(keyLength == null || mode == null || padding == null || key == null || key.equals(""))
+			{
+				System.out.println("some fields are blank");
 				return;
+			}
 			if(key.length() != Integer.parseInt(keyLength)/8)
+			{
+				System.out.printf("invalid key length %d, expecting %d\n", key.length(), Integer.parseInt(keyLength)/8);
 				return;
+			}
 			String plainText = "";
 			try
 			{
 				plainText = AES.decrypt(inputTextArea.getText(), mode, padding, key);
 			}
-			catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e1)
+			catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e1)
 			{
 				e1.printStackTrace();
 			}
